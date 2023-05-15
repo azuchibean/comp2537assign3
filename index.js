@@ -47,29 +47,29 @@ const pokeCounter = (e, pagePokemon) => {
   `);
 };
 
-const filter = async ({ pokemonCategory }) => {
-  const filteredPokemons = [];
+const filter = async ({ pokeCategory }) => {
+  const filteredPokemon = [];
 
   for (let i = 0; i < pokemons.length; i++) {
     const pokemon = pokemons[i];
     const res = await axios.get(
       `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
     );
-    const pokemonTypes = res.data.types.map((type) => type.type.name);
-    const matchesFilter = pokemonCategory.every((typeName) =>
-      pokemonTypes.includes(typeName)
+    const pokeTypes = res.data.types.map((type) => type.type.name);
+    const filterMatch = pokeCategory.every((typeName) =>
+      pokeTypes.includes(typeName)
     );
 
-    if (matchesFilter) {
-      filteredPokemons.push(pokemon);
+    if (filterMatch) {
+      filteredPokemon.push(pokemon);
     }
   }
 
-  filterList = filteredPokemons;
-  paginate(1, PAGE_SIZE, filteredPokemons);
-  const numPages = Math.ceil(filteredPokemons.length / PAGE_SIZE);
+  filterList = filteredPokemon;
+  paginate(1, PAGE_SIZE, filteredPokemon);
+  const numPages = Math.ceil(filteredPokemon.length / PAGE_SIZE);
   updatePaginationDiv(1, numPages);
-  pokeCounter(currentPage, filteredPokemons.length);
+  pokeCounter(currentPage, filteredPokemon.length);
 };
 
 const updatePaginationDiv = (currentPage, numPages) => {
@@ -137,14 +137,14 @@ const setup = async () => {
   pokeFilter();
   pokeCounter(currentPage, pokemons.length);
 
-  let pokemonCategory = [];
+  let pokeCategory = [];
 
   $("body").on("change", ".checkbox", function (e) {
-    pokemonCategory = [];
+    pokeCategory = [];
     $(".checkbox:checked").each(function () {
-      pokemonCategory.push($(this).val());
+      pokeCategory.push($(this).val());
     });
-    filter({ pokemonCategory });
+    filter({ pokeCategory });
   });
 
   $("body").on("click", ".pokeCard", async function (e) {
